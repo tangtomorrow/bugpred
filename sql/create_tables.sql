@@ -11,3 +11,10 @@ create table commit (
 	timeStamp varchar(20) ,
 	message varchar(255)
 );
+
+create table fileop (
+	id int auto_increment not null primary key ,
+	opType varchar(10) not null ,
+	filePath varchar(255) not null ,
+	commitid int not null
+);

@@ -1,1 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+    "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--这块等于dao接口的实现 namespace必须和接口的类路径一样 -->
+<mapper namespace="org.tym.bugpred.mybatis.dao.IFileOpDAO">
+	<resultMap type="FileOp" id="fileOpResultMap">
+		<!-- 属性名和数据库列名映射 -->
+        <id property="id" column="id"  />
+        <result property="type" column="opType"  />
+        <result property="path" column="filePath"  />
+        <result property="commitId" column="commitid"  />
+	</resultMap>
+
+	<select id="getFileOpsByCommitId" parameterType="int" resultMap="fileOpResultMap" >
+		select * from fileop where commitid=#{commitId}
+	</select>
+
+	<insert id="insertFileOp" parameterType="org.tym.bugpred.mybatis.bean.FileOp" useGeneratedKeys="true" keyProperty="id" >
+		insert into fileop
+		(opType,filePath,commitid) value
+		(
+			#{type,jdbcType=VARCHAR},
+			#{path,jdbcType=VARCHAR},
+			#{commitId,jdbcType=INTEGER}
+		)
+	</insert>
+</mapper>

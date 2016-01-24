@@ -4,6 +4,7 @@ public class FileOp {
 	private int id;
 	private String type;
 	private String path;
+	private int commitId;
 
 	public int getId() {
 		return id;
@@ -27,5 +28,13 @@ public class FileOp {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public int getCommitId() {
+		return commitId;
+	}
+
+	public void setCommitId(int commitId) {
+		this.commitId = commitId;
 	}
 }

@@ -4,10 +4,23 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--这块等于dao接口的实现 namespace必须和接口的类路径一样 -->
 <mapper namespace="org.tym.bugpred.mybatis.dao.ICommitDAO">
-	<!-- findByName 和 inserUser必须和接口中的方法名一样 返回一个User 就是刚才的别名 如果不弄别名要连类路径一起写 -->
-	<select id="findCommitByRevisionNo" parameterType="String" resultType="Commit" >
-		select * from commit where revisionNo=#{revisionNo}
-	</select>
+	<resultMap type="Commit" id="commitResultMap">
+		<!-- 属性名和数据库列名映射 -->
+        <id property="id" column="id"  />
+        <result property="revisionNo" column="revisionNo"  />
+        <result property="author" column="author"  />
+        <result property="timeStamp" column="timeStamp"  />
+        <result property="message" column="message"  />
+        <collection property="files" ofType="FileOp" select="selectFileOps" column="id" />
+	</resultMap>
+	
+	<resultMap type="FileOp" id="fileOpResultMap">
+		<!-- 属性名和数据库列名映射 -->
+        <id property="id" column="id"  />
+        <result property="type" column="opType"  />
+        <result property="path" column="filePath"  />
+        <result property="commitId" column="commitid"  />
+	</resultMap>
 
 	<insert id="insertCommit" parameterType="org.tym.bugpred.mybatis.bean.Commit" useGeneratedKeys="true" keyProperty="id" >
 		insert into commit
@@ -19,4 +32,35 @@
 			#{message,jdbcType=VARCHAR}
 		)
 	</insert>
+	
+	<!--
+	<select id="findCommitByRevisionNo" parameterType="String" resultType="commitResultMap" >
+		select * from commit where revisionNo=#{revisionNo}
+	</select>
+	-->
+		
+	<!--  只能查出一条，原因未知
+	<select id="findCommitByRevisionNo" parameterType="String" resultMap="commitResultMap" >
+		SELECT
+			c.id,
+			c.revisionNo,
+			c.author,
+			c.timeStamp,
+			c.message,
+			f.id,
+			f.opType,
+			f.filePath
+		FROM commit c
+		LEFT JOIN fileop f ON(c.id = f.commitid)
+		WHERE c.revisionNo = #{revisionNo}
+	</select>
+	-->
+	
+	<select id="selectFileOps" parameterType="String" resultMap="fileOpResultMap" >
+		select * from fileop where commitid=#{commitId}
+	</select>
+	
+	<select id="findCommitByRevisionNo" parameterType="String" resultMap="commitResultMap" >
+		select * from commit where revisionNo=#{revisionNo}
+	</select>
 </mapper>
