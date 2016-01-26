@@ -11,7 +11,9 @@
         <result property="author" column="author"  />
         <result property="timeStamp" column="timeStamp"  />
         <result property="message" column="message"  />
-        <collection property="files" ofType="FileOp" select="selectFileOps" column="id" />
+        <collection property="files" ofType="FileOp" select="selectFileOps" column="id" /> 
+        <!-- collection标签中的的column=“id”， 应该指的是将commit库查询结果中的id作为查询参数传递到子查询selectFileOps中-->
+       	<!-- 以上是集合嵌套查询，还有一种方式是集合嵌套结果 -->
 	</resultMap>
 	
 	<resultMap type="FileOp" id="fileOpResultMap">
@@ -33,34 +35,13 @@
 		)
 	</insert>
 	
-	<!--
-	<select id="findCommitByRevisionNo" parameterType="String" resultType="commitResultMap" >
-		select * from commit where revisionNo=#{revisionNo}
-	</select>
-	-->
-		
-	<!--  只能查出一条，原因未知
-	<select id="findCommitByRevisionNo" parameterType="String" resultMap="commitResultMap" >
-		SELECT
-			c.id,
-			c.revisionNo,
-			c.author,
-			c.timeStamp,
-			c.message,
-			f.id,
-			f.opType,
-			f.filePath
-		FROM commit c
-		LEFT JOIN fileop f ON(c.id = f.commitid)
-		WHERE c.revisionNo = #{revisionNo}
-	</select>
-	-->
-	
+	<!-- 集合嵌套查询 -->
 	<select id="selectFileOps" parameterType="String" resultMap="fileOpResultMap" >
-		select * from fileop where commitid=#{commitId}
+		select * from fileop where commitid=#{id}
 	</select>
 	
 	<select id="findCommitByRevisionNo" parameterType="String" resultMap="commitResultMap" >
 		select * from commit where revisionNo=#{revisionNo}
 	</select>
+	
 </mapper>
