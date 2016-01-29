@@ -31,8 +31,8 @@ public class Test {
 		 * }
 		 */
 
-		//testInsertCommit();
-		testFindCommitByRevisionNo();
+		testInsertCommit();
+		//testFindCommitByRevisionNo();
 		
 		//testInsertFileOp();
 		//testGetFileOpsByCommitId();
